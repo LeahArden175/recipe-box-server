@@ -1,0 +1,19 @@
+const path = require("path");
+const express = require("express");
+const UsersService = require("./users-service");
+
+const usersRouter = express.Router();
+const jsonParser = express.json();
+
+usersRouter
+    .route('/')
+    .get((req, res, next) => {
+        const knexInstance = req.app.get("db");
+        UsersService.getAllUsers(knexInstance)
+          .then((users) => {
+            res.json(users);
+          })
+          .catch(next);
+      })
+
+    module.exports = usersRouter
