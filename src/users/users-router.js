@@ -7,35 +7,79 @@ const usersRouter = express.Router();
 const jsonParser = express.json();
 
 usersRouter
-    .route('/')
-    .get((req, res, next) => {
-        const knexInstance = req.app.get("db");
-        UsersService.getAllUsers(knexInstance)
-          .then((users) => {
-            res.json(users);
-          })
-          .catch(next);
+  .route("/")
+  .get((req, res, next) => {
+    const knexInstance = req.app.get("db");
+    UsersService.getAllUsers(knexInstance)
+      .then((users) => {
+        res.json(users);
       })
-      .post(jsonParser, (req, res, next) => {
-          const{full_name, username, password} = req.body;
-          const newUser = {full_name, username, password};
+      .catch(next);
+  })
+  .post(jsonParser, (req, res, next) => {
+    const { full_name, username, password } = req.body;
+    const newUser = { full_name, username, password };
 
-          for(const [key, value] of Object.entries(newUser))
-            if(value == null)
-                return res.status(400).json({
-                    error: `Missing ${key} in request body`
-                });
+    for (const [key, value] of Object.entries(newUser))
+      if (value == null)
+        return res.status(400).json({
+          error: `Missing ${key} in request body`,
+        });
 
-            return UsersService.insertUser(req.app.get('db'), newUser)
-                .then(user => {
-                    res
-                        .status(201)
-                        .location(path.posix.join(req.originalUrl, `/${user.id}`))
-                        .json((user) => {
-                            res.json(user)
-                        })
-                })
-                .catch(next)
+    return UsersService.insertUser(req.app.get("db"), newUser)
+      .then((user) => {
+        res
+          .status(201)
+          .location(path.posix.join(req.originalUrl, `/${user.id}`))
+          .json((user) => {
+            res.json(user);
+          });
       })
+      .catch(next);
+  });
 
-    module.exports = usersRouter
+usersRouter
+  .route("/:user_id")
+  .all((req, res, next) => {
+    UsersService.getById(req.app.get("db"), req.params.user_id)
+      .then((user) => {
+        if (!user) {
+          return res.status(404).json({
+            error: { message: "User does not exist" },
+          });
+        }
+        res.user = user;
+        next();
+      })
+      .catch(next);
+  })
+  .get((req, res, next) => {
+    res.json(res.user);
+  })
+  .delete((req, res, next) => {
+    UsersService.deleteUser(req.app.get("db"), req.params.user_id)
+      .then((numRowsAffected) => {
+        res.status(204).end();
+      })
+      .catch(next);
+  })
+  .patch(jsonParser, (req, res, next) => {
+    const { full_name, username, password } = req.body;
+    const userToUpdate = { full_name, username, password };
+
+    const numOfValues = Object.values(userToUpdate).filter(Boolean).length;
+    if (numOfValues === 0)
+      return res.status(400).json({
+        error: {
+          message:
+            "Request body must contain either full_name, username, or password",
+        },
+      });
+    UsersService.patchUser(req.app.get("db"), req.params.user_id, userToUpdate)
+      .then((numRowsAffected) => {
+        res.status(204).end();
+      })
+      .catch(next);
+  });
+
+module.exports = usersRouter;
