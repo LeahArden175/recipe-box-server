@@ -48,4 +48,26 @@ instructionsRouter
         .catch(next)
     })
 
+instructionsRouter
+    .route('/:instruction_id')
+    .all((req, res, next) => {
+        InstructionsService.getById(
+            req.app.get('db'),
+            req.params.instruction_id
+        )
+        .then(instruction => {
+            if(!instruction) {
+                return res.status(404).json({
+                    error: { message: 'Instruction does not exist'}
+                })
+            }
+            res.instruction = instruction
+            next()
+        })
+        .catch(next)
+    })
+    .get((req, res, next) => {
+        res.json(serializeInstructions(res.instruction))
+    })
+
 module.exports = instructionsRouter

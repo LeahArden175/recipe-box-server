@@ -15,6 +15,13 @@ const InstructionsService = {
                 return rows[0]
             })
     },
+    getById(knex, id) {
+        return knex
+            .from('instructions')
+            .returning('*')
+            .where({ id })
+            .first()
+    }
 }
 
 module.exports = InstructionsService
