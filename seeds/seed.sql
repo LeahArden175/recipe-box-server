@@ -4,8 +4,10 @@ TRUNCATE TABLE  ingredients, instructions, recipe_tags, tags, recipes, recipe_bo
 
 INSERT INTO recipe_box_users (id, username, full_name, password)
 VALUES 
-( 1, 'leah', 'leah arden', 'replacewithhashpass'),
-(2, 'nick', 'nick d', 'newpassreplace');
+( 1, 'leah', 'leah arden', '$2a$12$.yPZ0O4snWoYH/QG3I0EiujhAoLmAfNr8YxHmIsTMJuHlO1MB3VjG'),
+-- Password for leah is HiddenPassword12!
+(2, 'nick', 'nick d', '$2a$12$xwnjhIiXL8bKl214MyWzZO6EbEk25wzhg1Z7j/ViPZwq77QdIHFTW');
+-- Password for nick is NicksPassword4@!
 
 INSERT INTO recipes (id, user_id, title)
 VALUES

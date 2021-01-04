@@ -1,10 +1,20 @@
 const path = require("path");
 const express = require("express");
+const xss = require("xss");
 const UsersService = require("./users-service");
 const { json } = require("express");
 
 const usersRouter = express.Router();
 const jsonParser = express.json();
+
+const serializeUser = (user) => ({
+  id: user.id,
+  full_name: xss(user.full_name),
+  username: xss(user.username),
+  password: xss(user.password),
+  date_created: user.date_created,
+  date_modified: user.date_modified,
+});
 
 usersRouter
   .route("/")
@@ -12,7 +22,7 @@ usersRouter
     const knexInstance = req.app.get("db");
     UsersService.getAllUsers(knexInstance)
       .then((users) => {
-        res.json(users);
+        res.json(users.map(serializeUser));
       })
       .catch(next);
   })
@@ -26,14 +36,26 @@ usersRouter
           error: `Missing ${key} in request body`,
         });
 
-    return UsersService.insertUser(req.app.get("db"), newUser)
-      .then((user) => {
-        res
-          .status(201)
-          .location(path.posix.join(req.originalUrl, `/${user.id}`))
-          .json((user) => {
-            res.json(user);
-          });
+    const passwordError = UsersService.validatePassword(password);
+
+    if (passwordError) return res.status(400).json({ error: passwordError });
+
+    return UsersService.hashPassword(password)
+      .then((hashedPassword) => {
+        const newUser = {
+          username,
+          password: hashedPassword,
+          full_name,
+          date_created: "now()"
+        };
+        return UsersService.insertUser(req.app.get("db"), newUser).then(
+          (user) => {
+            res
+              .status(201)
+              .location(path.posix.join(req.originalUrl, `/${user.id}`))
+              .json(serializeUser(user));
+          }
+        );
       })
       .catch(next);
   });
@@ -54,7 +76,7 @@ usersRouter
       .catch(next);
   })
   .get((req, res, next) => {
-    res.json(res.user);
+    res.json(serializeUser(res.user));
   })
   .delete((req, res, next) => {
     UsersService.deleteUser(req.app.get("db"), req.params.user_id)
