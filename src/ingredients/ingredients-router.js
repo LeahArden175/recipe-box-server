@@ -70,5 +70,35 @@ ingredientsRouter
     .get((req, res, next) => {
         res.json(serializeIngredient(res.ingredient))
     })
+    .delete((req, res, next) => {
+        IngredientsService.deleteIngredient(
+            req.app.get('db'),
+            req.params.ingredient_id
+        )
+        .then(() => {
+            res.status(204).end()
+        })
+        .catch(next)
+    })
+    .patch(jsonParser, (req, res, next) => {
+        const {food_item, amount, recipe_id, unit} = req.body
+        const ingredientToUpdate = {food_item, amount, recipe_id, unit}
+
+        const numOfValues = Object.values(ingredientToUpdate).filter(Boolean).length
+            if(numOfValues === 0) {
+                return res.json(404).json({
+                    error: {message: 'Request body must contain either food_item, amount, recipe_id, unit'}
+                })
+            }
+        IngredientsService.editIngredient(
+            req.app.get('db'),
+            req.params.ingredient_id,
+            ingredientToUpdate
+        )
+        .then(numRowsAffected => {
+            res.status(200).json(numRowsAffected)
+        })
+        .catch(next)
+    })
 
  module.exports = ingredientsRouter   

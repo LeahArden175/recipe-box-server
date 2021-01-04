@@ -21,6 +21,20 @@ const IngredientsService = {
             .select('*')
             .where({ id })
             .first()
+    },
+    deleteIngredient(knex, id) {
+        return knex('ingredients')
+            .where({ id })
+            .delete()
+    },
+    editIngredient(knex, id, newIngredientFields) {
+        return knex('ingredients')
+            .where({ id })
+            .update(newIngredientFields)
+            .returning('*')
+            .then(rows => {
+                return rows[0]
+            })
     }
 }
 
