@@ -14,6 +14,13 @@ const IngredientsService = {
             .then(rows => {
                 return rows[0]
             })
+    },
+    getById(knex, id) {
+        return knex
+            .from('ingredients')
+            .select('*')
+            .where({ id })
+            .first()
     }
 }
 

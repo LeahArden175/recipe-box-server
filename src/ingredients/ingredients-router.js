@@ -49,4 +49,26 @@ ingredientsRouter
         .catch(next)
     })
 
+ingredientsRouter
+    .route('/:ingredient_id')
+    .all((req, res, next) => {
+        IngredientsService.getById(
+            req.app.get('db'),
+            req.params.ingredient_id
+        )
+        .then(ingredient => {
+            if(!ingredient) {
+                return res.status(404).json({
+                    error: {message: 'Ingredient does not exist'}
+                })
+            }
+            res.ingredient = ingredient
+            next()
+        })
+        .catch(next)
+    })
+    .get((req, res, next) => {
+        res.json(serializeIngredient(res.ingredient))
+    })
+
  module.exports = ingredientsRouter   
