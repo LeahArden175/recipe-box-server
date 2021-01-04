@@ -7,6 +7,7 @@ const { NODE_ENV } = require('./config')
 const usersRouter = require('./users/users-router')
 const recipesRouter = require('./recipes/recipes-router')
 const authRouter = require('./auth/auth-router')
+const instructionsRouter = require('./instructions/instructions-router')
 
 const app = express()
 
@@ -21,6 +22,7 @@ app.use(cors())
 app.use('/api/users', usersRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/recipes', recipesRouter)
+app.use('/api/instructions', instructionsRouter)
 
 app.get('/', (req, res) =>{
     res.send('Hello, boilerplate!')
