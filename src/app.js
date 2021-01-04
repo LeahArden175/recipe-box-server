@@ -10,6 +10,7 @@ const authRouter = require('./auth/auth-router')
 const instructionsRouter = require('./instructions/instructions-router')
 const ingredientsRouter = require('./ingredients/ingredients-router')
 const tagsRouter = require('./tags/tags-router')
+const recipeTagsRouter = require('./recipe-tags/recipe-tags-router')
 
 const app = express()
 
@@ -27,6 +28,7 @@ app.use('/api/recipes', recipesRouter)
 app.use('/api/instructions', instructionsRouter)
 app.use('/api/ingredients', ingredientsRouter)
 app.use('/api/tags', tagsRouter)
+app.use('/api/recipe_tags', recipeTagsRouter)
 
 app.get('/', (req, res) =>{
     res.send('Hello, boilerplate!')
