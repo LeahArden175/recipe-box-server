@@ -26,6 +26,15 @@ TagsService = {
         return knex('tags')
             .where({ id })
             .delete()
+    },
+    editTag(knex, id, newTagField) {
+        return knex('tags')
+            .where({ id })
+            .update(newTagField)
+            .returning('*')
+            .then(rows => {
+                return rows[0]
+            })
     }
 }
 

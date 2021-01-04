@@ -77,5 +77,26 @@ tagsRouter
         })
         .catch(next)
     })
+    .patch(jsonParser, (req, res, next) => {
+        const {tag_name} = req.body
+        const tagToUpdate = {tag_name}
+
+        const numOfValues = Object.values(tagToUpdate).filter(Boolean).length
+        if(numOfValues === 0) {
+            return res.status(400).json({
+                error: {message: 'Request body must contain tag_name'}
+            })
+        }
+
+        TagsService.editTag(
+            req.app.get('db'),
+            req.params.tag_id,
+            tagToUpdate
+        )
+        .then(numRowsAffected => {
+            res.status(200).json(numRowsAffected)
+        })
+        .catch(next)
+    })
 
 module.exports = tagsRouter;
