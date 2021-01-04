@@ -5,6 +5,15 @@ const IngredientsService = {
         return knex
             .select('*')
             .from('ingredients')
+    },
+    addIngredient(knex, newIngredient) {
+        return knex
+            .insert(newIngredient)
+            .into('ingredients')
+            .returning('*')
+            .then(rows => {
+                return rows[0]
+            })
     }
 }
 

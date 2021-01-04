@@ -24,5 +24,29 @@ ingredientsRouter
         })
         .catch(next)
     })
+    .post(jsonParser, (req, res, next) => {
+        const {food_item, amount, recipe_id, unit} = req.body
+        const newIngredient = {food_item, amount, recipe_id, unit}
+
+        for(const [key, value] of Object.entries(newIngredient)) {
+            if(value ==  null) {
+                return res.status(400).json({
+                    error: {message: `Message ${key} from request body`}
+                })
+            }
+        }
+
+        IngredientsService.addIngredient(
+            req.app.get('db'),
+            newIngredient
+        )
+        .then(ingredient => [
+            res
+                .status(201)
+                .location(path.posix.join(req.originalUrl, `/${ingredient.id}`))
+                .json(serializeIngredient(ingredient))
+        ])
+        .catch(next)
+    })
 
  module.exports = ingredientsRouter   
