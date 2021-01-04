@@ -25,6 +25,15 @@ const RecipesService = {
         return knex('recipes')
             .where({ id })
             .delete()
+    },
+    editRecipe(knex, id, newRecipeFields) {
+        return knex('recipes')
+            .where({ id })
+            .update(newRecipeFields)
+            .returning('*')
+            .then(rows => {
+                return rows[0]
+            })
     }
 }
 

@@ -75,5 +75,26 @@ recipesRouter
         })
         .catch(next)
     })
+    .patch(jsonParser, (req, res, next) => {
+        const {title} = req.body
+        const recipeToUpdate = {title}
+
+        const numberOfValues = Object.values(recipeToUpdate).filter(Boolean).length
+        if(numberOfValues === 0) {
+            return res.status(400).json({
+                error: {message : 'Request body must contain title'}
+            })
+        }
+
+        RecipesService.editRecipe(
+            req.app.get('db'),
+            req.params.recipe_id,
+            recipeToUpdate
+        )
+        .then(numRowsAffected => {
+            res.status(200).json(numRowsAffected)
+        })
+        .catch(next)
+    })
 
 module.exports = recipesRouter
