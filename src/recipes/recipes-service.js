@@ -14,6 +14,18 @@ const RecipesService = {
                 return rows[0]
             })
     },
+    getById(knex, id) {
+        return knex
+            .from('recipes')
+            .select('*')
+            .where({ id })
+            .first()
+    },
+    deleteRecipe(knex, id) {
+        return knex('recipes')
+            .where({ id })
+            .delete()
+    }
 }
 
 module.exports = RecipesService;
