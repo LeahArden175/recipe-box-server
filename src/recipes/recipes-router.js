@@ -18,7 +18,7 @@ recipesRouter
             })
             .catch(next)
     })
-    .post(jsonParser, (req, res, next) => {
+    .post(requireAuth, jsonParser, (req, res, next) => {
         const {title} = req.body
         const newRecipe = {title}
 
@@ -28,7 +28,7 @@ recipesRouter
             })
         }
 
-        newRecipe.user_id = req.user.user_id
+        newRecipe.user_id = req.user.id
 
         RecipesService.addRecipe(
             req.app.get('db'),
