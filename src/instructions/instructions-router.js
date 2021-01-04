@@ -69,5 +69,15 @@ instructionsRouter
     .get((req, res, next) => {
         res.json(serializeInstructions(res.instruction))
     })
+    .delete((req, res, next) => {
+        InstructionsService.deleteInstruction(
+            req.app.get('db'),
+            req.params.instruction_id
+        )
+        .then(() => {
+            res.status(204).end()
+        }) 
+        .catch(next)
+    })
 
 module.exports = instructionsRouter

@@ -21,6 +21,11 @@ const InstructionsService = {
             .returning('*')
             .where({ id })
             .first()
+    },
+    deleteInstruction(knex, id) {
+        return knex('instructions')
+            .where({ id })
+            .delete()
     }
 }
 
