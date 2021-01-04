@@ -79,5 +79,26 @@ instructionsRouter
         }) 
         .catch(next)
     })
+    .patch(jsonParser, (req, res, next) => {
+        const {recipe_id, list_order, step_info} = req.body
+        const instructionToUpdate = {recipe_id, list_order, step_info}
+
+        const numberOfValues = Object.values(instructionToUpdate).filter(Boolean).length
+        if(numberOfValues === 0) {
+            return res.status(400).json({
+                error: {message : 'Request body must contain either list_order or step_info'}
+            })
+        }
+
+        InstructionsService.editInstruction(
+            req.app.get('db'),
+            req.params.instruction_id,
+            instructionToUpdate
+        )
+        .then(numRowsAfffected => {
+            res.status(200).json(numRowsAfffected)
+        })
+        .catch(next)
+    })
 
 module.exports = instructionsRouter

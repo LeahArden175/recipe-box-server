@@ -26,6 +26,15 @@ const InstructionsService = {
         return knex('instructions')
             .where({ id })
             .delete()
+    },
+    editInstruction(knex, id, newInstructionFields) {
+        return knex('instructions')
+            .where({ id })
+            .update(newInstructionFields)
+            .returning('*')
+            .then(rows => {
+                return rows[0]
+            })
     }
 }
 
