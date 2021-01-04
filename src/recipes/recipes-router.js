@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path')
 const RecipesService = require('./recipes-service')
+const {requireAuth} = require('../middleware/jwt-auth')
 
 
 const recipesRouter = express.Router()
@@ -8,9 +9,10 @@ const jsonParser = express.json()
 
 recipesRouter
     .route('/')
+    .all(requireAuth)
     .get((req, res, next) => {
         const knexInstance = req.app.get('db')
-        RecipesService.getAllRecipes(knexInstance)
+        RecipesService.getAllRecipes(knexInstance, req.user.id)
             .then((recipes) => {
                 res.json(recipes)
             })

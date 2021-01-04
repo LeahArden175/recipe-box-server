@@ -1,9 +1,9 @@
 const RecipesService = {
-    getAllRecipes(knex) {
+    getAllRecipes(knex, id) {
         return knex 
         .select('*')
         .from('recipes')
-        //.where({user_id : id})
+        .where({user_id : id})
     },
     addRecipe(knex, newRecipe) {
         return knex
