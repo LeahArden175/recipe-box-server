@@ -3,6 +3,7 @@ const path = require('path')
 const xss = require('xss')
 const InstructionsService = require('./instructions-service')
 const {requireAuth} = require('../middleware/jwt-auth')
+const { json } = require('express')
 
 const instructionsRouter = express.Router()
 const jsonParser = express.json()
@@ -16,12 +17,33 @@ const serializeInstructions = instructions => ({
 
 instructionsRouter
     .route('/')
-    // .all(requireAuth)
     .get((req, res, next) => {
         const knexInstance = req.app.get('db')
         InstructionsService.getAllInstructions(knexInstance)
         .then((instructions) => {
             res.json(instructions.map(serializeInstructions))
+        })
+        .catch(next)
+    })
+    .post(jsonParser, (req, res, next) => {
+        const {recipe_id, list_order, step_info} = req.body
+        const newInstruction = {recipe_id, list_order, step_info}
+
+        for(const [key, value] of Object.entries(newInstruction))
+            if(value == null)
+                return res.status(400).json({
+                    error: `Missing ${key} in request body`
+                })
+        
+        InstructionsService.addInstructions(
+            req.app.get('db'),
+            newInstruction
+        )
+        .then(instruction => {
+            res 
+                .status(201)
+                .location(path.posix.join(req.originalUrl, `/${instruction.id}`))
+                .json(serializeInstructions(instruction))
         })
         .catch(next)
     })
