@@ -20,7 +20,7 @@ function makeUsersArray() {
       date_modified: null,
     },
     {
-      id: 2,
+      id: 3,
       full_name: "Joy",
       username: "Joy",
       password: "$2a$12$xwnjhIiXL8bKl214MyWzZO6EbEk25wzhg1Z7j/ViPZwq77QdIHFTW",
@@ -343,7 +343,7 @@ function seedUsers(db, users) {
         ])
 }
 function cleanTables(db) {
-    return db.transaction((trx) => {
+    return db.transaction((trx) => 
         trx
             .raw(
                 `TRUNCATE
@@ -355,13 +355,13 @@ function cleanTables(db) {
                     recipe_box_users
                 `
             )
-            .then(() => {
+            .then(() => 
                 Promise.all([
                     trx.raw(
                         'ALTER SEQUENCE ingredients_id_seq minvalue 0 START WITH 1'
                     ),
                     trx.raw(
-                        'ALTER SEQUENCE instructionss_id_seq minvalue 0 START WITH 1'
+                        'ALTER SEQUENCE instructions_id_seq minvalue 0 START WITH 1'
                     ),
                     trx.raw(
                         'ALTER SEQUENCE recipe_tags_id_seq minvalue 0 START WITH 1'
@@ -373,17 +373,17 @@ function cleanTables(db) {
                         'ALTER SEQUENCE recipes_id_seq minvalue 0 START WITH 1'
                     ),
                     trx.raw(
-                        'ALTER SEQUENCE recipe_box_users_id_seq minvalue 0 STARTS WITH 1'
+                        'ALTER SEQUENCE recipe_box_users_id_seq minvalue 0 START WITH 1'
                     ),
                     trx.raw(`SELECT setval('ingredients_id_seq', 0)`),
                     trx.raw(`SELECT setval('instructions_id_seq', 0)`),
                     trx.raw(`SELECT setval('recipe_tags_id_seq', 0)`),
                     trx.raw(`SELECT setval('tags_id_seq', 0)`),
                     trx.raw(`SELECT setval('recipes_id_seq', 0)`),
-                    trx.raw(`SELECT setval('recipe_box_users_id_seq, 0')`),
+                    trx.raw(`SELECT setval('recipe_box_users_id_seq', 0)`),
                 ])
-            })
-    })
+            )
+    )
 }
 function seedRecipes(db, users, recipes) {
     return db.transaction(async(trx) => {
