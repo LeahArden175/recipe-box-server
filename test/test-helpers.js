@@ -414,7 +414,7 @@ function seedInstructions(db, users, recipes, instructions) {
         ])
     })
 }
-function seedtags(db, tags) {
+function seedTags(db, tags) {
     return db
         .into('tags')
         .insert('tags')
