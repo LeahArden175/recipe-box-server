@@ -13,6 +13,13 @@ const RecipeTagsService = {
             .join('tags', 'recipe_tags.tag_id', '=', 'tags.id')
             .where({'recipe_tags.recipe_id' : recipeId})
     },
+    getRecipesForTag(knex, tagId) {
+        return knex
+            .select('*')
+            .from('recipes')
+            .join('recipe_tags', 'recipe_tags.recipe_id', '=', 'recipes.id')
+            .where({'recipe_tags.tag_id' : tagId})
+    }
 }
 
 module.exports = RecipeTagsService
