@@ -84,7 +84,7 @@ describe("Recipes Endpoints", function () {
         })
       })
   })
-  describe.only('GET /api/recipes/:recipe_id', () => {
+  describe('GET /api/recipes/:recipe_id', () => {
       context('Given no recipes in the db', () => {
           const testUsers =  helpers.makeUsersArray();
 
@@ -152,6 +152,67 @@ describe("Recipes Endpoints", function () {
                     expect(res.body.title).to.eql(expectedRecipe.title)
                 })
           })
+      })
+  })
+  describe.only('POST /api/recipes', () => {
+      const testUsers = helpers.makeUsersArray();
+
+      beforeEach('insert users', () => {
+          return db
+            .into('recipe_box_users')
+            .insert(testUsers)
+      })
+      it('creates a new recipe, responding with 201 and new recipe', () => {
+          const newrecipe = {
+              "title": 'test title',
+              "user_id": 1
+          }
+
+          return supertest(app)
+            .post(`/api/recipes`)
+            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+            .send(newrecipe)
+            .expect(201)
+            .expect(res => {
+                expect(res.body.title).to.eql(newrecipe.title)
+                expect(res.body.user_id).to.eql(newrecipe.user_id)
+            })
+            .then(res => {
+                supertest(app)
+                    .get(`/api/recipes/${res.body.id}`)
+                    .expect(res.body)
+            })
+      })
+
+      const requiredFields = ['title']
+
+      requiredFields.forEach((field) => {
+          const newRecipe = {
+              title: 'test recipe'
+          }
+          it(`responds with 400 and an error message when the '${field}' is missing`, () => {
+            delete newRecipe[field]
+  
+            return supertest(app)
+              .post('/api/recipes')
+              .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+              .send(newRecipe)
+              .expect(400, {
+                  error: { message: `Missing ${field} in request body`}
+              })
+        })
+        it('remove an xss attack', () => {
+            const {maliciousRecipe, expectedRecipe} = helpers.makeMaliciousRecipe();
+
+            return supertest(app)
+                .post('/api/recipes')
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                .send(maliciousRecipe)
+                .expect(201)
+                .expect(res => {
+                    expect(res.body.title).to.eql(expectedRecipe.title)
+                })
+        })
       })
   })
 });

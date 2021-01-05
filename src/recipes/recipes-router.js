@@ -32,7 +32,7 @@ recipesRouter
 
         if(title == null) {
             return res.status(400).json({
-                error: {message : 'Missing title from request body'}
+                error: {message : 'Missing title in request body'}
             })
         }
 
@@ -46,7 +46,7 @@ recipesRouter
             res
                 .status(201)
                 .location(path.posix.join(req.originalUrl, `/${recipe.id}`))
-                .json(recipe)
+                .json(serializeRecipe(recipe))
         })
         .catch(next)
     })
