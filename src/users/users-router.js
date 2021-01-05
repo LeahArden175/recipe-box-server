@@ -3,6 +3,7 @@ const express = require("express");
 const xss = require("xss");
 const UsersService = require("./users-service");
 const { json } = require("express");
+const { hasUserWithUsername } = require("./users-service");
 
 const usersRouter = express.Router();
 const jsonParser = express.json();
@@ -11,7 +12,6 @@ const serializeUser = (user) => ({
   id: user.id,
   full_name: xss(user.full_name),
   username: xss(user.username),
-  password: xss(user.password),
   date_created: user.date_created,
   date_modified: user.date_modified,
 });
@@ -39,6 +39,12 @@ usersRouter
     const passwordError = UsersService.validatePassword(password);
 
     if (passwordError) return res.status(400).json({ error: passwordError });
+
+    UsersService.hasUserWithUsername(req.app.get('db'), username)
+        .then((hasUserWithUsername) => {
+          if(hasUserWithUsername)
+            return res.status(400).json({error: 'Username already taken'})
+        })
 
     return UsersService.hashPassword(password)
       .then((hashedPassword) => {
