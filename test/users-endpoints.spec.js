@@ -114,7 +114,7 @@ describe("Users Endpoints", function () {
       });
     });
     context("Happy path", () => {
-      it.only("responds with 201, serialized user, storing bcrypt password", () => {
+      it("responds with 201, serialized user, storing bcrypt password", () => {
         const newUser = {
           username: "testusername",
           password: "testPassword1!",

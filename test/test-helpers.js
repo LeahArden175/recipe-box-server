@@ -424,6 +424,22 @@ function seedTags(db, tags) {
             ])
         })
 }
+function makeMaliciousRecipe() {
+  const maliciousRecipe = {
+    id: 911,
+    title: 'Naughty naughty very naughty <script>alert("xss");</script>',
+    date_created: new Date().toISOString(),
+    user_id: 1
+  };
+  const expectedRecipe= {
+    ...maliciousRecipe,
+    title: 'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;',
+  };
+  return {
+    maliciousRecipe,
+    expectedRecipe
+  }
+}
 
 module.exports = {
   makeUsersArray,
@@ -439,5 +455,6 @@ module.exports = {
   seedRecipes,
   seedIngredients,
   seedInstructions,
-  seedTags
+  seedTags,
+  makeMaliciousRecipe
 };

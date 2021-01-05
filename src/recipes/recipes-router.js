@@ -1,11 +1,19 @@
 const express = require('express')
 const path = require('path')
+const xss = require('xss')
 const RecipesService = require('./recipes-service')
 const {requireAuth} = require('../middleware/jwt-auth')
 
 
 const recipesRouter = express.Router()
 const jsonParser = express.json()
+
+serializeRecipe = recipe => ({
+    id: recipe.id,
+    title: xss(recipe.title),
+    date_created: recipe.date_created,
+    user_id: recipe.user_id
+})
 
 recipesRouter
     .route('/')
@@ -14,7 +22,7 @@ recipesRouter
         const knexInstance = req.app.get('db')
         RecipesService.getAllRecipes(knexInstance, req.user.id)
             .then((recipes) => {
-                res.json(recipes)
+                res.json(recipes.map(serializeRecipe))
             })
             .catch(next)
     })
@@ -63,7 +71,7 @@ recipesRouter
         .catch(next)
     })
     .get((req, res, next) => {
-        res.json(res.recipe)
+        res.json(serializeRecipe(res.recipe))
     })
     .delete((req, res, next) => {
         RecipesService.deleteRecipe(
