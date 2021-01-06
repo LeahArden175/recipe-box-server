@@ -9,7 +9,7 @@ const jsonParser = express.json()
 const serializeIngredient = ingredient => ({
     id: ingredient.id,
     food_item: xss(ingredient.food_item),
-    amount: xss(ingredient.amount),
+    amount: ingredient.amount,
     recipe_id: ingredient.recipe_id,
     unit: ingredient.unit
 })
@@ -31,7 +31,7 @@ ingredientsRouter
         for(const [key, value] of Object.entries(newIngredient)) {
             if(value ==  null) {
                 return res.status(400).json({
-                    error: {message: `Message ${key} from request body`}
+                    error: {message: `Missing ${key} in request body`}
                 })
             }
         }

@@ -74,112 +74,112 @@ function makeIngredientsArray() {
     {
       id: 1,
       food_item: "olive oil",
-      amount: "4",
+      amount: 4,
       recipe_id: 2,
       unit: "tbs",
     },
     {
       id: 2,
       food_item: "choppped onion",
-      amount: "1",
+      amount: 1,
       recipe_id: 2,
       unit: "cup",
     },
     {
       id: 3,
       food_item: "minced garlic",
-      amount: "2",
+      amount: 2,
       recipe_id: 2,
       unit: "tsp",
     },
     {
       id: 4,
       food_item: "spaghetti",
-      amount: "1",
+      amount: 1,
       recipe_id: 2,
       unit: "lb",
     },
     {
       id: 5,
       food_item: "crushed tomatoes",
-      amount: "24",
+      amount: 24,
       recipe_id: 2,
       unit: "oz",
     },
     {
       id: 6,
       food_item: "salt",
-      amount: "1",
+      amount: 1,
       recipe_id: 2,
       unit: "tsp",
     },
     {
       id: 7,
       food_item: "pepper",
-      amount: "1",
+      amount: 1,
       recipe_id: 2,
       unit: "tsp",
     },
     {
       id: 8,
       food_item: "olive oil",
-      amount: "5",
+      amount: 5,
       recipe_id: 5,
       unit: "tbs",
     },
     {
       id: 9,
       food_item: "chopped onion",
-      amount: "1",
+      amount: 1,
       recipe_id: 5,
       unit: "cup",
     },
     {
       id: 10,
       food_item: "split peas",
-      amount: "1",
+      amount: 1,
       recipe_id: 5,
       unit: "lb",
     },
     {
       id: 11,
       food_item: "minced garlic",
-      amount: "2",
+      amount: 2,
       recipe_id: 5,
       unit: "tsp",
     },
     {
       id: 12,
       food_item: "ham hocks",
-      amount: "2",
+      amount: 2,
       recipe_id: 5,
       unit: "lbs",
     },
     {
       id: 13,
       food_item: "chicken stock",
-      amount: "8",
+      amount: 8,
       recipe_id: 5,
       unit: "cups",
     },
     {
       id: 14,
       food_item: "salt",
-      amount: "1",
+      amount: 1,
       recipe_id: 5,
       unit: "tsp",
     },
     {
       id: 15,
       food_item: "pepper",
-      amount: "2",
+      amount: 2,
       recipe_id: 5,
       unit: "tsp",
     },
     {
       id: 16,
       food_item: "test EDITED",
-      amount: "10",
+      amount: 10,
       recipe_id: 5,
       unit: "cup",
     },
@@ -440,6 +440,24 @@ function makeMaliciousRecipe() {
     expectedRecipe
   }
 }
+function makeMaliciousIngredient() {
+  const maliciousIngredient = {
+    id: 911,
+    food_item: 'Naughty naughty very naughty <script>alert("xss");</script>',
+    amount: 3,
+    recipe_id: 1,
+    unit: 'tbs'
+  };
+  const expectedIngredient = {
+    ...maliciousIngredient,
+    food_item: 'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;',
+  };
+  return {
+    maliciousIngredient,
+    expectedIngredient
+  }
+}
+
 
 module.exports = {
   makeUsersArray,
@@ -456,5 +474,6 @@ module.exports = {
   seedIngredients,
   seedInstructions,
   seedTags,
-  makeMaliciousRecipe
+  makeMaliciousRecipe,
+  makeMaliciousIngredient
 };

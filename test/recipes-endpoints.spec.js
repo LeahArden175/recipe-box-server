@@ -154,7 +154,7 @@ describe("Recipes Endpoints", function () {
           })
       })
   })
-  describe.only('POST /api/recipes', () => {
+  describe('POST /api/recipes', () => {
       const testUsers = helpers.makeUsersArray();
 
       beforeEach('insert users', () => {
@@ -201,7 +201,7 @@ describe("Recipes Endpoints", function () {
                   error: { message: `Missing ${field} in request body`}
               })
         })
-        it('remove an xss attack', () => {
+        it('removes an xss attack', () => {
             const {maliciousRecipe, expectedRecipe} = helpers.makeMaliciousRecipe();
 
             return supertest(app)
@@ -215,4 +215,116 @@ describe("Recipes Endpoints", function () {
         })
       })
   })
+  describe('DELETE /api/plants/:plants_id', () => {
+      context('Given recipes in the db', () => {
+          const testUsers = helpers.makeUsersArray();
+          const testRecipes = helpers.makeRecipesArray();
+
+          beforeEach('insert users and recipes', () => {
+            return db
+              .into('recipe_box_users')
+              .insert(testUsers)
+              .then(() => {
+                  return db
+                      .into('recipes')
+                      .insert(testRecipes)
+              })
+        })
+        it('responds with 204 and removes specified plant', () => {
+            const idToDelete = 1;
+            const expectedRecipes = testRecipes.filter(recipe => recipe.id !== idToDelete)
+            return supertest(app)
+                .delete(`/api/recipes/${idToDelete}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                .expect(204)
+                .then(res => {
+                    supertest(app)
+                        .get('/api/recipes')
+                        .expect(expectedRecipes)
+                })
+        })
+      })
+      context('Given no recipes in db', () => {
+          const testUsers = helpers.makeUsersArray();
+
+          beforeEach('insert users', () => {
+              return db
+                .into('recipe_box_users')
+                .insert(testUsers)
+          })
+
+          it('responds with 404', () => {
+              const recipeId = 123;
+              return supertest(app)
+                .delete(`/api/recipes/${recipeId}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                .expect(404, {error: {message: 'Recipe does not exist'}})
+          })
+      })
+  })
+  describe.only('PATCH /api/recipes/:recipe_id', () => {
+      context('Given no recipes in db', () => {
+          const testUsers = helpers.makeUsersArray();
+
+          beforeEach('insert users', () => {
+              return db
+                .into('recipe_box_users')
+                .insert(testUsers)
+          })
+
+          it('responds with 404', () => {
+              const recipeId = 123;
+              return supertest(app)
+                .patch(`/api/recipes/${recipeId}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                .expect(404, {
+                    error: { message: 'Recipe does not exist'}
+                })
+          })
+      })
+      context('Given recipes in db', () => {
+          const testUsers = helpers.makeUsersArray();
+          const testRecipes = helpers.makeRecipesArray();
+
+          beforeEach('insert users and recipes', () => {
+              return db
+                .into('recipe_box_users')
+                .insert(testUsers)
+                .then(() => {
+                    return db
+                        .into('recipes')
+                        .insert(testRecipes)
+                })
+          })
+          it('responds with 200 and updated recipe', () => {
+              const idToUpdate = 1
+              const updatedRecipe = {title: 'updated'}
+              const expectedRecipe = {
+                  ...testRecipes[idToUpdate - 1],
+                  ...updatedRecipe
+              }
+              return supertest(app)
+                .patch(`/api/recipes/${idToUpdate}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                .send(updatedRecipe)
+                .expect(200)
+                .then(res => {
+                    supertest(app)
+                        .get(`/api/recipes/${idToUpdate}`)
+                        .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                        .expect(expectedRecipe)
+                })
+          })
+          it('responds with 400 when no fields are supplied', () => {
+              const idToUpdate = 1
+              return supertest(app)
+                .patch(`/api/recipes/${idToUpdate}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                .send({ irrelevantField: 'foo'})
+                .expect(400, {
+                    error: {message: 'Request body must contain title'}
+                })
+          })
+      })
+    })
 });
