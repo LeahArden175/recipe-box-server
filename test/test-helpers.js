@@ -188,68 +188,58 @@ function makeIngredientsArray() {
 function makeInstructionsArray() {
   return [
     {
-      id: 1,
       recipe_id: 2,
       list_order: 1,
       step_info:
         "Heat olive oil in medium saute pan over medium heat until oil is shimmering. Add onions and cook until translucent, about 5-8 min. Add garlic and cook 1 min or until fragrant",
     },
     {
-      id: 2,
       recipe_id: 2,
       list_order: 2,
       step_info:
         "Add salt, pepper, and crushed tomatoes to the saute pan. Stir until combined",
     },
     {
-      id: 3,
       recipe_id: 2,
       list_order: 3,
       step_info:
         "Bring tomato mixture to a boil and then set the heat to low. Let simmer covered for 1hr",
     },
     {
-      id: 4,
       recipe_id: 2,
       list_order: 4,
       step_info:
         "While the sauce simmers, bring a large pot of heavily salted water to a boil. Add spaghetti and cook until al dente",
     },
     {
-      id: 5,
       recipe_id: 2,
       list_order: 5,
       step_info:
         "Drain pasta and add it to the simmering sauce. Mix until pasta is covered and serve!",
     },
     {
-      id: 6,
       recipe_id: 5,
       list_order: 1,
       step_info: "Heat olive oil in a large cast iron pot over medium heat",
     },
     {
-      id: 7,
       recipe_id: 5,
       list_order: 2,
       step_info:
         "Add onions to oil and cook until translucent. About 5-8 min. Add garlic and cook 1 min or until fragrant",
     },
     {
-      id: 8,
       recipe_id: 5,
       list_order: 3,
       step_info: "Add split peas and mix until coated with oil",
     },
     {
-      id: 9,
       recipe_id: 5,
       list_order: 4,
       step_info:
         "Add ham hocks, chicken stock, salt, and peper. Bring soup to a boil, then set the heat to low and let simmer, uncovered, for 1 hour. Be sure to mix every 20 min",
     },
     {
-      id: 10,
       recipe_id: 5,
       list_order: 5,
       step_info: "When soup is thick, take off heat and serve.",
@@ -305,48 +295,48 @@ function makeRecipeTagsArray() {
     },
   ];
 }
-function makeAuthHeader(user, secret = process.env.JWT_SECRET){
-    const token = jwt.sign({ user_id: user.id}, secret, {
-        subject: user.username,
-        algorithm: 'HS256'
-    })
-    return `Bearer ${token}`;
+function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
+  const token = jwt.sign({ user_id: user.id }, secret, {
+    subject: user.username,
+    algorithm: "HS256",
+  });
+  return `Bearer ${token}`;
 }
 function makeRecipesFixtures() {
-    const testUsers = makeUsersArray()
-    const testRecipes = makeRecipesArray(testUsers)
-    const testIngredients = makeIngredientsArray()
-    const testInstructions =  makeInstructionsArray()
-    const testTags = makeTagsArray()
-    const testRecipeTags = makeRecipeTagsArray(testRecipes, testTags)
-    return {
-        testUsers,
-        testRecipes,
-        testIngredients,
-        testInstructions,
-        testTags,
-        testRecipeTags
-    }
+  const testUsers = makeUsersArray();
+  const testRecipes = makeRecipesArray(testUsers);
+  const testIngredients = makeIngredientsArray();
+  const testInstructions = makeInstructionsArray();
+  const testTags = makeTagsArray();
+  const testRecipeTags = makeRecipeTagsArray(testRecipes, testTags);
+  return {
+    testUsers,
+    testRecipes,
+    testIngredients,
+    testInstructions,
+    testTags,
+    testRecipeTags,
+  };
 }
 function seedUsers(db, users) {
-    const preppedUsers = users.map((user) => ({
-        ...user,
-        password: bcrypt.hashSync(user.password, 1)
-    }))
-    return db
-        .into('recipe_box_users')
-        .insert(preppedUsers)
-        .then(() => [
-            db.raw(`SELECT setval('recipe_box_users_id_seq, ?)`, [
-                users[users.length - 1].id,
-            ])
-        ])
+  const preppedUsers = users.map((user) => ({
+    ...user,
+    password: bcrypt.hashSync(user.password, 1),
+  }));
+  return db
+    .into("recipe_box_users")
+    .insert(preppedUsers)
+    .then(() => [
+      db.raw(`SELECT setval('recipe_box_users_id_seq, ?)`, [
+        users[users.length - 1].id,
+      ]),
+    ]);
 }
 function cleanTables(db) {
-    return db.transaction((trx) => 
-        trx
-            .raw(
-                `TRUNCATE
+  return db.transaction((trx) =>
+    trx
+      .raw(
+        `TRUNCATE
                     ingredients,
                     instructions,
                     recipe_tags,
@@ -354,91 +344,80 @@ function cleanTables(db) {
                     recipes,
                     recipe_box_users
                 `
-            )
-            .then(() => 
-                Promise.all([
-                    trx.raw(
-                        'ALTER SEQUENCE ingredients_id_seq minvalue 0 START WITH 1'
-                    ),
-                    trx.raw(
-                        'ALTER SEQUENCE instructions_id_seq minvalue 0 START WITH 1'
-                    ),
-                    trx.raw(
-                        'ALTER SEQUENCE recipe_tags_id_seq minvalue 0 START WITH 1'
-                    ),
-                    trx.raw(
-                        'ALTER SEQUENCE tags_id_seq minvalue 0 START WITH 1'
-                    ),
-                    trx.raw(
-                        'ALTER SEQUENCE recipes_id_seq minvalue 0 START WITH 1'
-                    ),
-                    trx.raw(
-                        'ALTER SEQUENCE recipe_box_users_id_seq minvalue 0 START WITH 1'
-                    ),
-                    trx.raw(`SELECT setval('ingredients_id_seq', 0)`),
-                    trx.raw(`SELECT setval('instructions_id_seq', 0)`),
-                    trx.raw(`SELECT setval('recipe_tags_id_seq', 0)`),
-                    trx.raw(`SELECT setval('tags_id_seq', 0)`),
-                    trx.raw(`SELECT setval('recipes_id_seq', 0)`),
-                    trx.raw(`SELECT setval('recipe_box_users_id_seq', 0)`),
-                ])
-            )
-    )
+      )
+      .then(() =>
+        Promise.all([
+          trx.raw("ALTER SEQUENCE ingredients_id_seq minvalue 0 START WITH 1"),
+          trx.raw("ALTER SEQUENCE instructions_id_seq minvalue 0 START WITH 1"),
+          trx.raw("ALTER SEQUENCE recipe_tags_id_seq minvalue 0 START WITH 1"),
+          trx.raw("ALTER SEQUENCE tags_id_seq minvalue 0 START WITH 1"),
+          trx.raw("ALTER SEQUENCE recipes_id_seq minvalue 0 START WITH 1"),
+          trx.raw(
+            "ALTER SEQUENCE recipe_box_users_id_seq minvalue 0 START WITH 1"
+          ),
+          trx.raw(`SELECT setval('ingredients_id_seq', 0)`),
+          trx.raw(`SELECT setval('instructions_id_seq', 0)`),
+          trx.raw(`SELECT setval('recipe_tags_id_seq', 0)`),
+          trx.raw(`SELECT setval('tags_id_seq', 0)`),
+          trx.raw(`SELECT setval('recipes_id_seq', 0)`),
+          trx.raw(`SELECT setval('recipe_box_users_id_seq', 0)`),
+        ])
+      )
+  );
 }
 function seedRecipes(db, users, recipes) {
-    return db.transaction(async(trx) => {
-        await seedUsers(trx, users);
-        await trx.into('recipes').insert(recipes);
-        await trx.raw(`SELECT setval('recipe_id_seq', ?)`, [
-            recipes[recipes.length - 1].id
-        ])
-    })
+  return db.transaction(async (trx) => {
+    await seedUsers(trx, users);
+    await trx.into("recipes").insert(recipes);
+    await trx.raw(`SELECT setval('recipe_id_seq', ?)`, [
+      recipes[recipes.length - 1].id,
+    ]);
+  });
 }
 function seedIngredients(db, users, recipes, ingredients) {
-    return db.transaction(async (trx) => {
-        await seedUsers(trx, users);
-        await seedRecipes(trx, users, recipes)
-        await trx.into('ingrediets').insert(ingredients)
-        await trx.raw(`SELECT setval('ingredients_id_seq', ?)`, [
-            ingredients[ingredients.length -1].id
-        ])
-    })
+  return db.transaction(async (trx) => {
+    await seedUsers(trx, users);
+    await seedRecipes(trx, users, recipes);
+    await trx.into("ingrediets").insert(ingredients);
+    await trx.raw(`SELECT setval('ingredients_id_seq', ?)`, [
+      ingredients[ingredients.length - 1].id,
+    ]);
+  });
 }
 function seedInstructions(db, users, recipes, instructions) {
-    return db.transaction(async (trx) => {
-        await seedUsers(trx, users);
-        await seedRecipes(trx, users, recipes)
-        await trx.into('instructions').insert(instructions);
-        await trx.raw(`SELECT setval('instrutions_id_seq', ?)`, [
-            instructions[instructions.length - 1].id
-        ])
-    })
+  return db.transaction(async (trx) => {
+    await seedUsers(trx, users);
+    await seedRecipes(trx, users, recipes);
+    await trx.into("instructions").insert(instructions);
+    await trx.raw(`SELECT setval('instrutions_id_seq', ?)`, [
+      instructions[instructions.length - 1].id,
+    ]);
+  });
 }
 function seedTags(db, tags) {
-    return db
-        .into('tags')
-        .insert('tags')
-        .then(() => {
-            db.raw(`SELECT setval('tags_id_seq, ?)`, [
-                tags[tags.length - 1].id
-            ])
-        })
+  return db
+    .into("tags")
+    .insert("tags")
+    .then(() => {
+      db.raw(`SELECT setval('tags_id_seq, ?)`, [tags[tags.length - 1].id]);
+    });
 }
 function makeMaliciousRecipe() {
   const maliciousRecipe = {
     id: 911,
     title: 'Naughty naughty very naughty <script>alert("xss");</script>',
     date_created: new Date().toISOString(),
-    user_id: 1
+    user_id: 1,
   };
-  const expectedRecipe= {
+  const expectedRecipe = {
     ...maliciousRecipe,
-    title: 'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;',
+    title:
+      'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;',
   };
   return {
     maliciousRecipe,
-    expectedRecipe
-  }
+    expectedRecipe,
+  };
 }
 function makeMaliciousIngredient() {
   const maliciousIngredient = {
@@ -446,18 +425,37 @@ function makeMaliciousIngredient() {
     food_item: 'Naughty naughty very naughty <script>alert("xss");</script>',
     amount: 3,
     recipe_id: 1,
-    unit: 'tbs'
+    unit: "tbs",
   };
   const expectedIngredient = {
     ...maliciousIngredient,
-    food_item: 'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;',
+    food_item:
+      'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;',
   };
   return {
     maliciousIngredient,
-    expectedIngredient
-  }
+    expectedIngredient,
+  };
 }
-
+function makeMaliciousInstruction() {
+  const maliciousInstruction = {
+    id: 911,
+    recipe_id: 1,
+    list_order: 2,
+    step_info: 'Naughty naughty very naughty <script>alert("xss");</script>',
+  };
+  const expectedInstruction = {
+    id: 911,
+    recipe_id: 1,
+    list_order: 2,
+    step_info:
+      'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;',
+  };
+  return {
+    maliciousInstruction,
+    expectedInstruction,
+  };
+}
 
 module.exports = {
   makeUsersArray,
@@ -475,5 +473,6 @@ module.exports = {
   seedInstructions,
   seedTags,
   makeMaliciousRecipe,
-  makeMaliciousIngredient
+  makeMaliciousIngredient,
+  makeMaliciousInstruction,
 };

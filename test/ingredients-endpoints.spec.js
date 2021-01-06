@@ -310,7 +310,7 @@ describe("Ingredients Endpoints", () => {
       });
     });
   });
-  describe.only("POST /api/ingredients/:ingredient_id", () => {
+  describe("PATCH /api/ingredients/:ingredient_id", () => {
     context("given no ingredients in db", () => {
       const testUsers = helpers.makeUsersArray();
       const testRecipes = helpers.makeRecipesArray();
@@ -326,7 +326,7 @@ describe("Ingredients Endpoints", () => {
       it('responds with 404', () => {
         const ingredientId = 123;
         return supertest(app)
-          .delete(`/api/ingredients/${ingredientId}`)
+          .patch(`/api/ingredients/${ingredientId}`)
           .set("Authorization", helpers.makeAuthHeader(testUsers[0]))
           .expect(404, { error: { message: "Ingredient does not exist" } });
       })
