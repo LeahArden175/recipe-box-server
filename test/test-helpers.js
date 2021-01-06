@@ -249,19 +249,15 @@ function makeInstructionsArray() {
 function makeTagsArray() {
   return [
     {
-      id: 1,
       tag_name: "Dinner",
     },
     {
-      id: 2,
       tag_name: "Lunch",
     },
     {
-      id: 3,
       tag_name: "Breakfast",
     },
     {
-      id: 4,
       tag_name: "Dessert",
     },
   ];
@@ -456,6 +452,20 @@ function makeMaliciousInstruction() {
     expectedInstruction,
   };
 }
+function makeMaliciousTag() {
+  const maliciousTag = {
+    id: 911,
+    tag_name: 'Naughty naughty very naughty <script>alert("xss");</script>'
+  };
+  const expectedTag = {
+    id: 911,
+    tag_name: 'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;'
+  }
+  return {
+    maliciousTag,
+    expectedTag
+  }
+}
 
 module.exports = {
   makeUsersArray,
@@ -475,4 +485,5 @@ module.exports = {
   makeMaliciousRecipe,
   makeMaliciousIngredient,
   makeMaliciousInstruction,
+  makeMaliciousTag
 };

@@ -314,7 +314,7 @@ describe("Instructions endpoints", () => {
         })
       })
   })
-  describe.only('PATCH /api/instructions/:instruction_id', () => {
+  describe('PATCH /api/instructions/:instruction_id', () => {
       context('given instructions in db', () => {
         const testUsers = helpers.makeUsersArray();
         const testRecipes = helpers.makeRecipesArray();

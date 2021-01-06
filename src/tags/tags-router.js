@@ -10,7 +10,7 @@ const jsonParser = express.json();
 
 serializeTag = tag => ({
     id : tag.id,
-    tag_name : tag.tag_name
+    tag_name : xss(tag.tag_name)
 })
 
 tagsRouter
@@ -28,9 +28,9 @@ tagsRouter
         const {tag_name} = req.body;
         const newTag = {tag_name}
 
-        if(!newTag) {
+        if(!newTag.tag_name) {
             res.status(400).json({
-                error: {message : 'Missing tag_name in requestbody'}
+                error: 'Missing tag_name in request body'
             })
         }
 
