@@ -262,7 +262,7 @@ describe("Recipes Endpoints", function () {
           })
       })
   })
-  describe.only('PATCH /api/recipes/:recipe_id', () => {
+  describe('PATCH /api/recipes/:recipe_id', () => {
       context('Given no recipes in db', () => {
           const testUsers = helpers.makeUsersArray();
 

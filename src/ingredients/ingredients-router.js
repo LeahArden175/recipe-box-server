@@ -86,7 +86,7 @@ ingredientsRouter
 
         const numOfValues = Object.values(ingredientToUpdate).filter(Boolean).length
             if(numOfValues === 0) {
-                return res.json(404).json({
+                return res.status(400).json({
                     error: {message: 'Request body must contain either food_item, amount, recipe_id, unit'}
                 })
             }
