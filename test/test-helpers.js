@@ -249,15 +249,19 @@ function makeInstructionsArray() {
 function makeTagsArray() {
   return [
     {
+      id: 1,
       tag_name: "Dinner",
     },
     {
+      id: 2,
       tag_name: "Lunch",
     },
     {
+      id: 3,
       tag_name: "Breakfast",
     },
     {
+      id: 4,
       tag_name: "Dessert",
     },
   ];

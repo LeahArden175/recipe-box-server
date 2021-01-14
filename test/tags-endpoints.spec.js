@@ -180,7 +180,7 @@ describe('Tags endpoints', () => {
         })
       })
   })
-  describe('POST /api/tags', () => {
+  describe.only('POST /api/tags', () => {
     const testUsers = helpers.makeUsersArray();
     const testRecipes = helpers.makeRecipesArray();
     const testTags = helpers.makeTagsArray();
@@ -193,9 +193,9 @@ describe('Tags endpoints', () => {
           return db
             .into("recipes")
             .insert(testRecipes)
-            .then(() => {
-              return db.into("tags").insert(testTags);
-            });
+            // .then(() => {
+            //   return db.into("tags").insert(testTags);
+            // });
         });
     });
     it('creates new tag, responding with 201 and new tag', () => {

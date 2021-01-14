@@ -13,12 +13,22 @@ const RecipeTagsService = {
             .join('tags', 'recipe_tags.tag_id', '=', 'tags.id')
             .where({'recipe_tags.recipe_id' : recipeId})
     },
-    getRecipesForTag(knex, tagId) {
+    getRecipesForTag(knex, tagId, userId) {
         return knex
             .select('*')
             .from('recipes')
             .join('recipe_tags', 'recipe_tags.recipe_id', '=', 'recipes.id')
             .where({'recipe_tags.tag_id' : tagId})
+            .where({'recipes.user_id': userId})
+    },
+    addTag(knex, newTag) {
+        return knex
+        .insert(newTag)
+        .into('recipe_tags')
+        .returning('*')
+        .then(rows => {
+            return rows[0]
+        })
     }
 }
 

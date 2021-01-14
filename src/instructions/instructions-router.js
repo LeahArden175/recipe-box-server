@@ -17,6 +17,7 @@ const serializeInstructions = instructions => ({
 
 instructionsRouter
     .route('/')
+    .all(requireAuth)
     .get((req, res, next) => {
         const knexInstance = req.app.get('db')
         InstructionsService.getAllInstructions(knexInstance)
@@ -50,6 +51,7 @@ instructionsRouter
 
 instructionsRouter
     .route('/:instruction_id')
+    .all(requireAuth)
     .all((req, res, next) => {
         InstructionsService.getById(
             req.app.get('db'),

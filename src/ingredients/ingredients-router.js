@@ -2,6 +2,7 @@ const express = require('express')
 const path = require('path')
 const xss = require('xss')
 const IngredientsService = require('./ingredients-service')
+const {requireAuth} = require('../middleware/jwt-auth')
 
 const ingredientsRouter = express.Router()
 const jsonParser = express.json()
@@ -16,6 +17,7 @@ const serializeIngredient = ingredient => ({
 
 ingredientsRouter
     .route('/')
+    .all(requireAuth)
     .get((req, res, next) => {
         const knexInstance = req.app.get('db')
         IngredientsService.getAllIngredients(knexInstance)
@@ -51,6 +53,7 @@ ingredientsRouter
 
 ingredientsRouter
     .route('/:ingredient_id')
+    .all(requireAuth)
     .all((req, res, next) => {
         IngredientsService.getById(
             req.app.get('db'),

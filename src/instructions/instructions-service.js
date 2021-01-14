@@ -5,6 +5,7 @@ const InstructionsService = {
         return knex
             .select('*')
             .from('instructions')
+            
     },
     addInstructions(knex, newInstruction) {
         return knex
