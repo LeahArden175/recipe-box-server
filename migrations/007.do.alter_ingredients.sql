@@ -1,0 +1,2 @@
+ALTER TABLE ingredients
+ALTER COLUMN amount TYPE REAL;
