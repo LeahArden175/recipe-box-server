@@ -30,7 +30,7 @@ recipesRouter
         const {title} = req.body
         const newRecipe = {title}
 
-        if(title == null) {
+        if(title == null || title === "") {
             return res.status(400).json({
                 error: {message : 'Missing title in request body'}
             })

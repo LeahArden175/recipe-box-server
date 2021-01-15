@@ -23,7 +23,7 @@ recipeTagsRouter
         const newTag = {recipe_id, tag_id}
 
         for(const [key, value] of Object.entries(newTag)) {
-            if(value == null) {
+            if(value == null || value === '') {
                 return res.status(400).json({
                     error: {message: `Missing ${key} in request body`}
                 })

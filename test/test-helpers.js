@@ -188,58 +188,68 @@ function makeIngredientsArray() {
 function makeInstructionsArray() {
   return [
     {
+      id: 1,
       recipe_id: 2,
       list_order: 1,
       step_info:
         "Heat olive oil in medium saute pan over medium heat until oil is shimmering. Add onions and cook until translucent, about 5-8 min. Add garlic and cook 1 min or until fragrant",
     },
     {
+      id: 2,
       recipe_id: 2,
       list_order: 2,
       step_info:
         "Add salt, pepper, and crushed tomatoes to the saute pan. Stir until combined",
     },
     {
+      id: 3,
       recipe_id: 2,
       list_order: 3,
       step_info:
         "Bring tomato mixture to a boil and then set the heat to low. Let simmer covered for 1hr",
     },
     {
+      id: 4,
       recipe_id: 2,
       list_order: 4,
       step_info:
         "While the sauce simmers, bring a large pot of heavily salted water to a boil. Add spaghetti and cook until al dente",
     },
     {
+      id: 5,
       recipe_id: 2,
       list_order: 5,
       step_info:
         "Drain pasta and add it to the simmering sauce. Mix until pasta is covered and serve!",
     },
     {
+      id: 6,
       recipe_id: 5,
       list_order: 1,
       step_info: "Heat olive oil in a large cast iron pot over medium heat",
     },
     {
+      id: 7,
       recipe_id: 5,
       list_order: 2,
       step_info:
         "Add onions to oil and cook until translucent. About 5-8 min. Add garlic and cook 1 min or until fragrant",
     },
     {
+      id: 8,
       recipe_id: 5,
       list_order: 3,
       step_info: "Add split peas and mix until coated with oil",
     },
     {
+      id: 9,
       recipe_id: 5,
       list_order: 4,
       step_info:
         "Add ham hocks, chicken stock, salt, and peper. Bring soup to a boil, then set the heat to low and let simmer, uncovered, for 1 hour. Be sure to mix every 20 min",
     },
     {
+      id: 10,
       recipe_id: 5,
       list_order: 5,
       step_info: "When soup is thick, take off heat and serve.",
@@ -347,20 +357,20 @@ function cleanTables(db) {
       )
       .then(() =>
         Promise.all([
-          trx.raw("ALTER SEQUENCE ingredients_id_seq minvalue 0 START WITH 1"),
-          trx.raw("ALTER SEQUENCE instructions_id_seq minvalue 0 START WITH 1"),
-          trx.raw("ALTER SEQUENCE recipe_tags_id_seq minvalue 0 START WITH 1"),
-          trx.raw("ALTER SEQUENCE tags_id_seq minvalue 0 START WITH 1"),
-          trx.raw("ALTER SEQUENCE recipes_id_seq minvalue 0 START WITH 1"),
+          trx.raw("ALTER SEQUENCE ingredients_id_seq minvalue 0 START WITH 100"),
+          trx.raw("ALTER SEQUENCE instructions_id_seq minvalue 0 START WITH 100"),
+          trx.raw("ALTER SEQUENCE recipe_tags_id_seq minvalue 0 START WITH 100"),
+          trx.raw("ALTER SEQUENCE tags_id_seq minvalue 0 START WITH 100"),
+          trx.raw("ALTER SEQUENCE recipes_id_seq minvalue 0 START WITH 100"),
           trx.raw(
-            "ALTER SEQUENCE recipe_box_users_id_seq minvalue 0 START WITH 1"
+            "ALTER SEQUENCE recipe_box_users_id_seq minvalue 0 START WITH 100"
           ),
-          trx.raw(`SELECT setval('ingredients_id_seq', 0)`),
-          trx.raw(`SELECT setval('instructions_id_seq', 0)`),
-          trx.raw(`SELECT setval('recipe_tags_id_seq', 0)`),
-          trx.raw(`SELECT setval('tags_id_seq', 0)`),
-          trx.raw(`SELECT setval('recipes_id_seq', 0)`),
-          trx.raw(`SELECT setval('recipe_box_users_id_seq', 0)`),
+          trx.raw(`SELECT setval('ingredients_id_seq', 100)`),
+          trx.raw(`SELECT setval('instructions_id_seq', 100)`),
+          trx.raw(`SELECT setval('recipe_tags_id_seq', 100)`),
+          trx.raw(`SELECT setval('tags_id_seq', 100)`),
+          trx.raw(`SELECT setval('recipes_id_seq', 100)`),
+          trx.raw(`SELECT setval('recipe_box_users_id_seq', 100)`),
         ])
       )
   );

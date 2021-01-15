@@ -180,7 +180,7 @@ describe('Tags endpoints', () => {
         })
       })
   })
-  describe.only('POST /api/tags', () => {
+  describe('POST /api/tags', () => {
     const testUsers = helpers.makeUsersArray();
     const testRecipes = helpers.makeRecipesArray();
     const testTags = helpers.makeTagsArray();
