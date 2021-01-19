@@ -85,8 +85,8 @@ Endpoints
     gets ingredient with specific id
     <br />
  -DELETE
-    deletes ingredient with specific id   
-    <br />  
+    deletes ingredient with specific id
+    <br />
  -PATCH
     updates a specific ingredient
 
