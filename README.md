@@ -9,92 +9,127 @@ The front end code can be found at https://github.com/LeahArden175/recipe-box-cl
 -------------------------
 Endpoints
 
-Markup: 
--/api/users
+/api/users
+<br />
  -GET 
     gets all users
+    <br />
  -POST
     creates a new user
 
--/api/users/:user_id
+/api/users/:user_id
+<br />
  -GET
     gets user with specific id
+    <br />
  -DELETE
     deletes specific user
+    <br />
  -PATCH
-    updates a specific user    
+    updates a specific user  
+    <br />  
 
--/api/auth
+/api/auth
+<br />
  -POST
     checks that users password and username are correct. Then gives authToken
     
--/api/recipes
+/api/recipes
+<br />
  -GET
     gets all recipes for specific user
+    <br />
  -POST
     add new recipe for specific user
+    <br />
 
--/api/recipes/:recipe_id
+/api/recipes/:recipe_id
+<br />
  -GET
     gets recipe with specific id
+    <br />
  -DELETE
     deletes recipe with specific id     
+    <br />
  -PATCH
     updates a specific recipe
+    <br />
 
--/api/instructions
+/api/instructions
+<br />
  -GET
     gets all instructions
+    <br />
  -POST
     adds new instucton
+    <br />
 
--/api/instructions/:instruction_id
+/api/instructions/:instruction_id
+<br />
  -GET
     gets instruction with specific id
+    <br />
  -DELETE
     deletes instruction with specific id     
+    <br />
  -PATCH
     updates a specific instruction
 
--/api/ingredients
+/api/ingredients
+<br />
  -GET
     gets all ingredients
+    <br />
  -POST
     adds new ingredient
 
--/api/ingredients
+/api/ingredients
+<br />
  -GET
     gets ingredient with specific id
+    <br />
  -DELETE
-    deletes ingredient with specific id     
+    deletes ingredient with specific id   
+    <br />  
  -PATCH
     updates a specific ingredient
 
--/api/tags
+/api/tags
+<br />
  -GET
     gets all tags
+    <br />
  -POST
     adds new tag
 
--/api/tags/:tag_id
+/api/tags/:tag_id
+<br />
  -GET
     gets tag with specific id
+    <br />
  -DELETE
     deletes tag with specific id     
+    <br />
  -PATCH
     updates a specific tag
+    <br />
 
--/api/recipe_tags
+/api/recipe_tags
+<br />
  -GET
     gets all recipe_tags
+    <br />
  -POST
     adds new recipe_tag    
     
--/api/recipe_tags/tag/:recipeId
+/api/recipe_tags/tag/:recipeId
+<br />
  -GET
     gets tags for a specific recipe
+    <br />
 
--/api/recipe_tags/tag/:recipeId
+/api/recipe_tags/tag/:recipeId
+<br />
  -GET
     gets all recipes for a specific tag    
 
