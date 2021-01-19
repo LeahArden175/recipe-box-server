@@ -26,8 +26,7 @@ Endpoints
     deletes specific user
     <br />
  -PATCH
-    updates a specific user  
-    <br />  
+    updates a specific user
 
 /api/auth
 <br />
@@ -41,7 +40,6 @@ Endpoints
     <br />
  -POST
     add new recipe for specific user
-    <br />
 
 /api/recipes/:recipe_id
 <br />
@@ -49,11 +47,10 @@ Endpoints
     gets recipe with specific id
     <br />
  -DELETE
-    deletes recipe with specific id     
+    deletes recipe with specific id
     <br />
  -PATCH
     updates a specific recipe
-    <br />
 
 /api/instructions
 <br />
@@ -62,7 +59,6 @@ Endpoints
     <br />
  -POST
     adds new instucton
-    <br />
 
 /api/instructions/:instruction_id
 <br />
